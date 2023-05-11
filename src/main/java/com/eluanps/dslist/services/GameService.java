@@ -3,6 +3,7 @@ package com.eluanps.dslist.services;
 import com.eluanps.dslist.entities.Game;
 import com.eluanps.dslist.entities.dto.GameDTO;
 import com.eluanps.dslist.entities.dto.GameMinDTO;
+import com.eluanps.dslist.projections.GameMinProjection;
 import com.eluanps.dslist.repositories.GameRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,11 @@ public class GameService {
     public List<GameMinDTO> findAll() {
         List<Game> result = gameRepository.findAll();
         return result.stream().map(GameMinDTO::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByGameList(Long listId) {
+        List<GameMinProjection> games = gameRepository.searchByList(listId);
+        return games.stream().map(GameMinDTO::new).toList();
     }
 }
